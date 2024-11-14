@@ -10,10 +10,30 @@ const initialState: attacksState = {
     error: null
 }
 
-export const fetchAttacksOfOrg = createAsyncThunk("attacks/getList",
+export const fetchAttacksOfOrg = createAsyncThunk("attacks/getListOfOrg",
     async (attacker_id: string, thunkAPI) => {
         try {
             const response = await fetch(`${apiUrl}api/attacks/org/${attacker_id}`, {
+                headers: {
+                    "authorization": localStorage.getItem("token")! 
+                }
+            }
+            )
+            if (response.status !== 200) {
+                thunkAPI.rejectWithValue("Failed to login")
+            }
+            const data = await response.json()            
+            return data
+        } catch (error) {
+            console.log(error);
+        }
+    }
+)
+
+export const fetchAttacksOfArea = createAsyncThunk("attacks/getListOfArea",
+    async (area: string, thunkAPI) => {
+        try {
+            const response = await fetch(`${apiUrl}api/attacks/area/${area}`, {
                 headers: {
                     "authorization": localStorage.getItem("token")! 
                 }
@@ -51,6 +71,18 @@ const attackSlice = createSlice({
         state.error = null
         state.attacks = action.payload as unknown as IAttack[]
     }).addCase(fetchAttacksOfOrg.rejected, (state, action)=>{
+        state.status = DataStatus.FAILED
+        state.error = action.payload as string
+        state.attacks = []
+    }).addCase(fetchAttacksOfArea.pending, (state)=>{
+        state.status = DataStatus.LOADING
+        state.error = null
+        state.attacks = []
+    }).addCase(fetchAttacksOfArea.fulfilled, (state, action)=>{
+        state.status = DataStatus.SUCCESS
+        state.error = null
+        state.attacks = action.payload as unknown as IAttack[]
+    }).addCase(fetchAttacksOfArea.rejected, (state, action)=>{
         state.status = DataStatus.FAILED
         state.error = action.payload as string
         state.attacks = []

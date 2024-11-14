@@ -77,18 +77,16 @@ export default function AttackPage() {
                         ))}
                     </select>
                     <p>
-                        {user?.resources.map((resource: IResources) => (
-                            <button
-                                className="attack-button"
-                                key={resource.name}
-                                onClick={() => { 
-                                setMissile(resource.name);  
-                                handleAttack();
-                                }}
-                            >
-                                {`${resource.name} * ${resource.amount}`}
-                            </button>
-                        ))}
+                        {user?.resources?.map((resource: IResources) => (
+                        <button
+                        className="attack-button"
+                        key={resource.name}
+                        onClick={() => { 
+                    }}
+                        >
+                    {`${resource.name} * ${resource.amount}`}
+                    </button>
+                ))}
                     </p>
                 </div>
             </div>
@@ -107,3 +105,4 @@ export default function AttackPage() {
         </div>
     );
 }
+
