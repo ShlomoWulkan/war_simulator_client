@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { IResources } from "../../types/user";
 import { fetchAttacksOfOrg } from "../../redux/slices/attacksSlice";
 import { IAttack } from "../../types/attack";
-import { socket } from "../../main";  // נוודא ש-import את ה-socket
+import { socket } from "../../main";  
 import LaunchedCard from "./launchedCard";
+import { fetchUser } from "../../redux/slices/userSlice";
 
 export default function AttackPage() {
     const { user } = useAppSelector((state: RootState) => state.user);
@@ -40,7 +41,7 @@ export default function AttackPage() {
         }
     };
 
-    const handleAttack = () => {
+    const handleAttack = async () => {
         console.log("attacking");
         
         if (area === "") {
@@ -54,6 +55,8 @@ export default function AttackPage() {
             area: area,
             organization: user?.organization
         });
+        await dispatch(fetchUser(user?._id as string));
+
     };
 
     return (

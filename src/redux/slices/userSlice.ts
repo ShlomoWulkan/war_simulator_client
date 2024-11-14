@@ -3,9 +3,7 @@ import { DataStatus, userState } from "../../types/redux";
 import { IUser } from "../../types/user";
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
-
 const apiUrl = import.meta.env.VITE_API_URL;
-
 
 const initialState: userState = {
     user: null,
@@ -15,46 +13,54 @@ const initialState: userState = {
 
 const fetchLogin = createAsyncThunk("user/login",
     async (user: { username: string, password: string }, thunkAPI) => {
-        try {
-            const response = await fetch(`${apiUrl}api/auth/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(user)
-            })
-            if (response.status !== 200) {
-                thunkAPI.rejectWithValue("Failed to login")
-            }
-            const data = await response.json()
-            localStorage.setItem("token", data.token)
-            return data
-        } catch (error) {
-            console.log(error);
+        const response = await fetch(`${apiUrl}api/auth/login`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        })
+        if (response.status !== 200) {
+            thunkAPI.rejectWithValue("Failed to login")
         }
+        const data = await response.json()
+        localStorage.setItem("token", data.token)
+        return data
     }
 )
 
 const fetchRegister = createAsyncThunk("user/register",
     async (user: UserDTO, thunkAPI) => {
-        try {
-            const response = await fetch(`${apiUrl}api/auth/register`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify(user)
-            })
-            if (response.status !== 200) {
-                thunkAPI.rejectWithValue("Failed to register")
-            }
-            const data = await response.json()
-            return data
-        } catch (error) {
-            console.log(error);
+        const response = await fetch(`${apiUrl}api/auth/register`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(user)
+        })
+        if (response.status !== 200) {
+            thunkAPI.rejectWithValue("Failed to register")
         }
+        const data = await response.json()
+        return data
     }
 )
+
+const fetchUser = createAsyncThunk("user/fetchUser",
+    async (userId: string, thunkAPI) => {
+        const response = await fetch(`${apiUrl}api/users/${userId}`, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("token")}`
+            }
+        });
+        if (response.status !== 200) {
+            return thunkAPI.rejectWithValue("Failed to fetch user data");
+        }
+        const data = await response.json();
+        return data;
+    }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -78,9 +84,11 @@ const userSlice = createSlice({
         state.status = DataStatus.FAILED
         state.error = action.error as string
         state.user = null
-    })
+    }).addCase(fetchUser.fulfilled, (state, action) => {
+        state.user = action.payload as IUser;
+    });
   },
 });
 
-export { fetchLogin, fetchRegister }
+export { fetchLogin, fetchRegister, fetchUser }
 export default userSlice
