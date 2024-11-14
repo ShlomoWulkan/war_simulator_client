@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 const store = configureStore({
     reducer: {
         user: userSlice.reducer,
-        attack: attacksSlice.reducer
+        attacks: attacksSlice.reducer
     },
     middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
 })
