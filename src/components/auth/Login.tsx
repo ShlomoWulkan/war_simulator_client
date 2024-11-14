@@ -13,11 +13,18 @@ export default function Login() {
     useEffect(() => {
     if (!user?._id) return
     if (user?.organization ==="IDF") {
+        console.log(user);
         navigate("/defense")
     } else {
+        console.log(user);
         navigate("/attack")
     }
   }, [user]);
+
+  const handleLogin = () => {
+    dispatch(fetchLogin({username, password}))
+    console.log(user);
+  }
   
   return (
     <div className="login-form">
@@ -34,7 +41,7 @@ export default function Login() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
          />
-        <button onClick={ ()  => dispatch(fetchLogin({username, password}))}  >Login</button>
+        <button onClick={ handleLogin }  >Login</button>
         <Link to="/register">dont have an account yet? sign up here</Link>
       
     </div>

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAppSelector } from "../../redux/store";
+import { UserDTO } from "../../dto/userDTO";
 
 export default function Register() {
   const { user } = useAppSelector((state) => state.user);
@@ -23,18 +24,24 @@ export default function Register() {
   const apiUrl = import.meta.env.VITE_API_URL;
 
 
+
   const handleRegister = async () => {
     try {
+        let registerObj: UserDTO = {username, password, organization}
+        if (organization === "IDF") {
+            registerObj["area"] = area
+        }
         const res = await fetch(`${apiUrl}api/auth/register`, {
             method: "post",
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({username, password}),
+            body: JSON.stringify(registerObj),
           });
           console.log(res);
           
           await res.json();
+          navigate("/login");
     } catch (err) {
         console.log({err})
     }
