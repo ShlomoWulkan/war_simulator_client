@@ -16,7 +16,7 @@ const initialState: userState = {
 const fetchLogin = createAsyncThunk("user/login",
     async (user: { username: string, password: string }, thunkAPI) => {
         try {
-            const response = await fetch(`${apiUrl}auth/login`, {
+            const response = await fetch(`${apiUrl}api/auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -38,7 +38,7 @@ const fetchLogin = createAsyncThunk("user/login",
 const fetchRegister = createAsyncThunk("user/register",
     async (user: UserDTO, thunkAPI) => {
         try {
-            const response = await fetch(`${apiUrl}users/register`, {
+            const response = await fetch(`${apiUrl}api/auth/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

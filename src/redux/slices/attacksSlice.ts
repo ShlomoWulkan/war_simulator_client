@@ -14,7 +14,7 @@ const initialState: attacksState = {
 export const fetchAttacks = createAsyncThunk("attacks/getList",
     async (_, thunkAPI) => {
         try {
-            const response = await fetch(`${apiUrl}attacks/`, {
+            const response = await fetch(`${apiUrl}api/attacks/`, {
                 headers: {
                     "authorization": localStorage.getItem("token")! 
                 }
