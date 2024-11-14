@@ -2,7 +2,9 @@ import { UserDTO } from "../../dto/userDTO";
 import { DataStatus, userState } from "../../types/redux";
 import { IUser } from "../../types/user";
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import "dotenv/config"
+
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 
 const initialState: userState = {
@@ -14,7 +16,7 @@ const initialState: userState = {
 const fetchLogin = createAsyncThunk("user/login",
     async (user: { username: string, password: string }, thunkAPI) => {
         try {
-            const response = await fetch(`${process.env.API_URL}auth/login`, {
+            const response = await fetch(`${apiUrl}auth/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
@@ -36,7 +38,7 @@ const fetchLogin = createAsyncThunk("user/login",
 const fetchRegister = createAsyncThunk("user/register",
     async (user: UserDTO, thunkAPI) => {
         try {
-            const response = await fetch(`${process.env.API_URL}users/register`, {
+            const response = await fetch(`${apiUrl}users/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"

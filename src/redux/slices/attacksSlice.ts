@@ -1,7 +1,8 @@
 import { attacksState, DataStatus } from "../../types/redux";
 import { ActionReducerMapBuilder, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { IAttack } from "../../types/attack";
-import "dotenv/config"
+
+const apiUrl = import.meta.env.VITE_API_URL;
 
 
 const initialState: attacksState = {
@@ -13,7 +14,7 @@ const initialState: attacksState = {
 export const fetchAttacks = createAsyncThunk("attacks/getList",
     async (_, thunkAPI) => {
         try {
-            const response = await fetch(`${process.env.API_URL}attacks/`, {
+            const response = await fetch(`${apiUrl}attacks/`, {
                 headers: {
                     "authorization": localStorage.getItem("token")! 
                 }

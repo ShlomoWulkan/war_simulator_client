@@ -6,9 +6,16 @@ import store from './redux/store'
 import './index.css'
 import App from './App.tsx'
 import { io } from "socket.io-client";
-import "dotenv/config";
 
-export const socket = io(`${process.env.API_URL}`);
+
+const apiUrl = import.meta.env.VITE_API_URL;
+
+
+export const socket = io(`${apiUrl}`);
+
+socket.on("connect", () => {
+  console.log("Connected to server");
+})
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -17,5 +24,5 @@ createRoot(document.getElementById('root')!).render(
         <App />
       </Provider>
     </BrowserRouter>
-  </StrictMode>,
+  </StrictMode>
 )
